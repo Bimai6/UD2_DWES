@@ -1,4 +1,5 @@
 <?php
+$rutaOrigen = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ' ';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $num1 = $_GET['number1'];
@@ -6,16 +7,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (is_numeric($num1) && is_numeric($num2)) {
         $suma = $num1 + $num2;
-        $rutaOrigen= isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'defaultPage.php';
-        $rutaOrigenConParams= $rutaOrigen . (strpos($rutaOrigen, '?') === false ? '?' : '&') . "suma=$suma";
-        header("Location: $rutaOrigenConParams");
-        exit(); 
+        header("Location: " . strtok($rutaOrigen, '?') . "?suma=" . urlencode($suma));
+        exit();
     } else {
-        header('Location: AF1.php?error=Por favor, realice el formulario introduciendo parámetros válidos');
+        header("Location: " . strtok($rutaOrigen, '?') . "?error=" . urlencode("Por favor, introduzca los parámetros válidos"));
         exit();
     }
-}else{
-    header("Location: AF1.php?error=Por favor, realice el formulario");
+} else {
+    header("Location: " . strtok($rutaOrigen, '?') . "?error=" . urlencode("Por favor, realice el formulario"));
     exit();
 }
 
