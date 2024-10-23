@@ -45,35 +45,44 @@
         );
 
         $englishWords = array_keys($diccionary);
-        $wordsAvailable = implode(',', $englishWords);
+        $wordsAvailable = implode(', ', $englishWords);
 
         echo "<p> Las palabras disponibles son: </p>";
-        echo "<p> { $wordsAvailable } </p>";
-        
-        if (!isset($_POST['word'])) {
-            echo "<p> Por favor, introduzca una palabra </p>";
-        } else {
-            $word= $_POST['word'];
-            $anyMatch= false;
-            foreach ($englishWords as $value) {
-                if($word === $value){
-                    $anyMatch = true;
-                    break;
-                }
-            }
-
-            if($anyMatch){
-                $spanishWord = array_search($word, $diccionary);
-                echo "<p> La palabra en español es : $spanishWord </p>";
-            }else{
-                echo "<p> Por favor, introduzca una de las palabras disponibles </p>";
-            }
-        }
+        echo "<p style='color: blue'> { $wordsAvailable } </p>";
         ?>
         <label for="word">Introduce una palabra: </label>
         <input type="text" name="word"> <br>
         <input type="submit" value="Enviar">
     </form>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (empty($_POST['word'])) {
+            echo "<p style='color: red'> Por favor, introduzca una palabra. </p>";
+        } else {
+            $word = strtolower($_POST['word']);
+            $capitalLetter = strtoupper($word[0]);
+            $word = $capitalLetter . substr($word, 1);
+
+            $anyMatch = false;
+            foreach ($englishWords as $value) {
+                if ($word === $value) {
+                    $anyMatch = true;
+                    break;
+                }
+            }
+
+            if ($anyMatch) {
+                $spanishWord = $diccionary[$word];
+                echo "<p> La palabra en español es : $spanishWord </p>";
+            } else {
+                echo "<p style='color: red'> Por favor, introduzca una de las palabras disponibles. </p>";
+            }
+        }
+    }
+
+
+    ?>
 </body>
 
 </html>
